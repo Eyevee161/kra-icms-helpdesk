@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Reports — KRA ICMS Help Desk{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-bar-chart"></i> Reports & Analytics</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <div class="text-muted">Total Tickets</div>
+            <div class="display-6 fw-bold">{{ total }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <div class="text-muted">Avg. Resolution Time</div>
+            <div class="display-6 fw-bold">{% if avg_hours %}{{ avg_hours }}h{% else %}—{% endif %}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>By Status</h5>
+            <ul class="list-group list-group-flush">
+                {% for item in by_status %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.status|title }} <span class="badge bg-secondary">{{ item.count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>By Category</h5>
+            <ul class="list-group list-group-flush">
+                {% for item in by_category %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.category__name }} <span class="badge bg-secondary">{{ item.count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>By Priority</h5>
+            <ul class="list-group list-group-flush">
+                {% for item in by_priority %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.priority__name }} <span class="badge bg-secondary">{{ item.count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>By Assignee</h5>
+            <ul class="list-group list-group-flush">
+                {% for item in by_assignee %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.assigned_to__username }} <span class="badge bg-secondary">{{ item.count }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No assignments yet</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

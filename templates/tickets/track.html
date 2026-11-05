@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Track Ticket — KRA ICMS Help Desk{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card p-4">
+            <h3 class="mb-4"><i class="bi bi-search text-danger"></i> Track Your Ticket</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Ticket Number</label>
+                    {{ form.ticket_number }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email used when submitting</label>
+                    {{ form.email }}
+                </div>
+                <button type="submit" class="btn btn-kra"><i class="bi bi-search"></i> Track</button>
+            </form>
+        </div>
+
+        {% if ticket %}
+        <div class="card p-4 mt-4">
+            <h5>Ticket: {{ ticket.ticket_number }}</h5>
+            <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+            <p><strong>Status:</strong>
+                <span class="badge badge-status-{{ ticket.status }}">{{ ticket.get_status_display }}</span>
+            </p>
+            <p><strong>Priority:</strong> {{ ticket.priority.name }}</p>
+            <p><strong>Category:</strong> {{ ticket.category.name }}</p>
+            <p><strong>Submitted:</strong> {{ ticket.created_at|date:"d M Y H:i" }}</p>
+            {% if ticket.assigned_to %}
+            <p><strong>Assigned to:</strong> {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}</p>
+            {% endif %}
+            <a href="{% url 'ticket_detail_public' ticket.ticket_number %}" class="btn btn-outline-primary btn-sm">View full details</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

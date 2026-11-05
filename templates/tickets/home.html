@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home — KRA ICMS Help Desk{% endblock %}
+{% block content %}
+<div class="hero text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold"><i class="bi bi-headset"></i> KRA ICMS Help Desk</h1>
+        <p class="lead mb-4">Submit and track taxpayer complaints related to the Integrated Customs Management System</p>
+        <a href="{% url 'submit_ticket' %}" class="btn btn-light btn-lg me-2"><i class="bi bi-plus-circle"></i> Submit Complaint</a>
+        <a href="{% url 'track_ticket' %}" class="btn btn-outline-light btn-lg"><i class="bi bi-search"></i> Track Ticket</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 p-4 text-center">
+            <i class="bi bi-file-earmark-plus display-4 text-danger mb-3"></i>
+            <h5>1. Submit</h5>
+            <p class="text-muted">Describe your issue, attach supporting documents, and get a unique ticket number.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4 text-center">
+            <i class="bi bi-search display-4 text-danger mb-3"></i>
+            <h5>2. Track</h5>
+            <p class="text-muted">Use your ticket number and email to check the current status anytime.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4 text-center">
+            <i class="bi bi-check2-circle display-4 text-danger mb-3"></i>
+            <h5>3. Resolve</h5>
+            <p class="text-muted">Our ICMS support team reviews, assigns, and resolves your complaint.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

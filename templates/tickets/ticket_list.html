@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}All Tickets — KRA ICMS Help Desk{% endblock %}
+{% block content %}
+<h2 class="mb-3">All Tickets</h2>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-auto">
+        <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+    </div>
+    <div class="col-auto">
+        <select name="status" class="form-select">
+            <option value="">All statuses</option>
+            <option value="open" {% if status == "open" %}selected{% endif %}>Open</option>
+            <option value="in_progress" {% if status == "in_progress" %}selected{% endif %}>In Progress</option>
+            <option value="pending" {% if status == "pending" %}selected{% endif %}>Pending</option>
+            <option value="resolved" {% if status == "resolved" %}selected{% endif %}>Resolved</option>
+            <option value="closed" {% if status == "closed" %}selected{% endif %}>Closed</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select name="assigned" class="form-select">
+            <option value="">All assignments</option>
+            <option value="me">Assigned to me</option>
+            <option value="unassigned">Unassigned</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-kra" type="submit">Filter</button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Ticket #</th>
+                    <th>Subject</th>
+                    <th>Taxpayer</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assigned</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tickets %}
+                <tr>
+                    <td><code>{{ t.ticket_number }}</code></td>
+                    <td>{{ t.subject|truncatechars:35 }}</td>
+                    <td>{{ t.taxpayer_name }}</td>
+                    <td>{{ t.category.name }}</td>
+                    <td>{{ t.priority.name }}</td>
+                    <td><span class="badge badge-status-{{ t.status }}">{{ t.get_status_display }}</span></td>
+                    <td>{{ t.assigned_to|default:"—" }}</td>
+                    <td>{{ t.created_at|date:"d M Y" }}</td>
+                    <td><a href="{% url 'ticket_detail' t.pk %}" class="btn btn-sm btn-outline-primary">Open</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9" class="text-center text-muted py-4">No tickets found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
