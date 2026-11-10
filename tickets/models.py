@@ -73,9 +73,29 @@ class Ticket(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.ticket_number:
-            # Generate KRA-style ticket number: KRA-ICMS-YYYYMMDD-XXXX
+            # Mapping of category name to short code
+            category_codes = {
+                "Customs Declaration Issues": "CD",
+                "Payment & Receipts": "PAY",
+                "System Access / Login": "ACC",
+                "Cargo Release / Clearance": "CR",
+                "Tariff / Classification": "TAR",
+                "Bond & Guarantees": "BG",
+                "Warehousing": "WH",
+                "Other / General Enquiry": "GEN",
+            }
+
+            code = "GEN"
+            if self.category:
+                code = category_codes.get(self.category.name, "GEN")
+
             date_part = timezone.now().strftime("%Y%m%d")
-            last_ticket = Ticket.objects.filter(ticket_number__startswith=f"KRA-ICMS-{date_part}").order_by("-id").first()
+            prefix = f"KRA-{code}-{date_part}"
+
+            last_ticket = Ticket.objects.filter(
+                ticket_number__startswith=prefix
+            ).order_by("-id").first()
+
             if last_ticket:
                 try:
                     seq = int(last_ticket.ticket_number.split("-")[-1]) + 1
@@ -83,11 +103,13 @@ class Ticket(models.Model):
                     seq = 1
             else:
                 seq = 1
-            self.ticket_number = f"KRA-ICMS-{date_part}-{seq:04d}"
+
+            self.ticket_number = f"{prefix}-{seq:04d}"
+
         if self.status == "resolved" and not self.resolved_at:
             self.resolved_at = timezone.now()
-        super().save(*args, **kwargs)
 
+        super().save(*args, **kwargs)
 
 class TicketAttachment(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="attachments")
